@@ -70,14 +70,14 @@ public class Main {
             String[] parts = line.split("base64,");
 
             if (parts.length != 2) {
-                writeHTML(exchange, "Invalid base64").close();
+                writeHTML(exchange, "You call this an HTTP request🤦").close();
                 return;
             }
 
             String mime = parts[0].split(":")[1].split(";")[0];
 
             if (!mime.equals("application/pdf")) {
-                writeHTML(exchange, "Invalid mime type").close();
+                writeHTML(exchange, "I don't like your MIME").close();
                 return;
             }
 
@@ -96,7 +96,7 @@ public class Main {
         }
 
 
-        writeHTML(exchange, "<h1>Printing...</h1>").close();
+        writeHTML(exchange, "Printer is trying his best 🤞").close();
     }
 
     public static void main(String[] args) {
