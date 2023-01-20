@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>QPrint</title>
+</head>
+<body>
+<form action="/print" method="post" id="print-form">
+    <input type="file" name="file">
+    <input type="submit" value="Print">
+</form>
+<div id="print-result"></div>
+<script>
+    // Read file and send it as base64 string
+    const form = document.getElementById('print-form');
+    const resultDiv = document.getElementById('print-result');
+
+    const toBase64 = file => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+    })
+
+    form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        resultDiv.innerHTML = '<h2>Loading...</h2>';
+
+        const file = document.querySelector('input[type="file"]').files[0];
+        const b64 = await toBase64(file);
+
+        const result = await fetch('/print', {
+            method: 'POST',
+            body: b64
+        });
+
+        resultDiv.innerHTML = await result.text();
+    });
+</script>
+</body>
+</html>
