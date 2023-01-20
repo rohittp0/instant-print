@@ -14,8 +14,9 @@ public class PrintPDF {
     private final PDDocument document;
     private PrintService printService;
 
-    public PrintPDF(String file) throws IOException {
-        this.document = Loader.loadPDF(new File("test.pdf"));
+    public PrintPDF(File file) throws IOException {
+        this.document = Loader.loadPDF(file);
+        this.printService = PrintServiceLookup.lookupDefaultPrintService();
 
         if(printService == null)
             throw new IllegalArgumentException("Invalid printer name or device not found");

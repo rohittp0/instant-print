@@ -4,6 +4,7 @@ import com.sun.net.httpserver.HttpServer;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.print.PrinterException;
 import java.io.*;
 import java.net.InetSocketAddress;
 
@@ -61,6 +62,8 @@ public class Main {
             return;
         }
 
+        File output;
+
         try(BufferedReader reader = new BufferedReader(new InputStreamReader(exchange.getRequestBody())))
         {
             String line = reader.readLine();
@@ -79,8 +82,17 @@ public class Main {
             }
 
             // Write bytes to file output.pdf
+            output = new File("uploads/"+Math.random()+".pdf");
             byte[] bytes = java.util.Base64.getDecoder().decode(parts[1]);
-            java.nio.file.Files.write(new File("uploads/file.pdf").toPath(), bytes);
+            java.nio.file.Files.write(output.toPath(), bytes);
+        }
+
+        PrintPDF printPDF = new PrintPDF(output);
+
+        try {
+            printPDF.print();
+        } catch (PrinterException e) {
+            throw new RuntimeException(e);
         }
 
 
